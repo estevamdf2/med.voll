@@ -1,5 +1,6 @@
 package med.voll.api.controller;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.paciente.DadosCadastraisPaciente;
 import med.voll.api.paciente.DadosListagemPaciente;
@@ -18,12 +19,11 @@ public class PacienteController {
     private PacienteRepository repository;
     @GetMapping
     public List<DadosListagemPaciente> listar(){
-        System.out.println("lista ae");
         return repository.findAll().stream().map(DadosListagemPaciente::new).toList();
-
     }
 
     @PostMapping
+    @Transactional
     public void cadastrar(@RequestBody @Valid DadosCadastraisPaciente dadosPaciente){
         repository.save(new Paciente(dadosPaciente));
     }
