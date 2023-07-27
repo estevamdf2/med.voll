@@ -21,6 +21,7 @@ public class Paciente {
     private String cpf;
     @Embedded
     private DadosEndereco endereco;
+    private Boolean ativo;
 
     public Paciente(DadosCadastraisPaciente dados){
         this.nome = dados.nome();
@@ -28,5 +29,6 @@ public class Paciente {
         this.telefone = dados.telefone();
         this.cpf = dados.cpf();
         this.endereco = dados.endereco();
+        this.ativo = true;
     }
 }
