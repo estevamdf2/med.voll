@@ -2,13 +2,15 @@ package med.voll.api.domain.paciente;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import med.voll.api.domain.endereco.Endereco;
 
-@Entity(name = "paciente")
+@Entity(name = "Paciente")
 @Table(name = "Pacientes")
 @Getter
+@Generated
 @NoArgsConstructor
 @AllArgsConstructor
 public class Paciente {

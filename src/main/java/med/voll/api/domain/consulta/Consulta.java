@@ -11,7 +11,7 @@ import med.voll.api.domain.paciente.Paciente;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Table(name = "consulta")
+@Table(name = "consultas")
 @Entity(name = "Consulta")
 @Getter
 @NoArgsConstructor
@@ -33,6 +33,5 @@ public class Consulta {
 
     private LocalDateTime data;
 
-    public Consulta(Object o, Medico medico, Paciente paciente, LocalDate data) {
-    }
+
 }
