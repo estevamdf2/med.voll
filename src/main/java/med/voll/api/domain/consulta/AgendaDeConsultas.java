@@ -2,6 +2,7 @@ package med.voll.api.domain.consulta;
 
 import med.voll.api.domain.ValidacaoException;
 import med.voll.api.domain.consulta.validacoes.ValidadorAgendamentoDeConsulta;
+import med.voll.api.domain.consulta.validacoes.ValidadorCancelamentoDeConsulta;
 import med.voll.api.domain.medicos.Medico;
 import med.voll.api.domain.medicos.MedicoRepository;
 import med.voll.api.domain.paciente.PacienteRepository;
@@ -24,6 +25,10 @@ public class AgendaDeConsultas {
 
     @Autowired
     private List<ValidadorAgendamentoDeConsulta> validadores;
+
+    @Autowired
+    private List<ValidadorCancelamentoDeConsulta> validadoresCancelamento;
+
     public DadosDetalhamentoConsulta agendar(DadosAgendamentoConsulta dados){
         if(!pacienteRepository.existsById(dados.idPaciente())){
             throw new ValidacaoException("Id do paciente informado não existe!");
@@ -57,4 +62,32 @@ public class AgendaDeConsultas {
         }
         return medicoRepository.escolherMedicoAleatorioLivreNaData(dados.especialidade(), dados.data());
     }
+
+    public DadosCancelamentoConsulta cancelar(DadosCancelamentoConsulta dados) {
+        pacienteExiste(dados.idPaciente());
+        medicoExiste(dados.idMedico());
+
+        validadoresCancelamento.forEach(v -> v.validar(dados));
+
+        var paciente = pacienteRepository.getReferenceById(dados.idPaciente());
+        var medico = medicoRepository.findById(dados.idMedico()).get();
+
+        var consulta = new Consulta(dados.id(), medico, paciente, dados.data());
+        consultaRepository.delete(consulta);
+
+        return new DadosCancelamentoConsulta(consulta, dados.dataCancelamento(), dados.motivo());
+    }
+
+    private void pacienteExiste(Long idPaciente) {
+        if(!pacienteRepository.existsById(idPaciente)){
+            throw new ValidacaoException("Id do paciente informado não existe!");
+        }
+    }
+
+    private void medicoExiste(Long idMedico){
+        if(idMedico !=null && !medicoRepository.existsById(idMedico)){
+            throw new ValidacaoException("Id do médico informado não existe!");
+        }
+    }
+
 }
